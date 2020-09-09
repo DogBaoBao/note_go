@@ -1,4 +1,4 @@
-# Casbin 导致的数据库连接池满
+# Casbin 导致的数据库连接满
 
 ## 现状
 
@@ -20,6 +20,13 @@ too Many Connections
 show variables like '%max_connections%';
 
 max_connections	128
+```
+
+> 如果要设置数据库连接的最大值呢？
+
+```sql
+// 设置最大连接数 1000，但是如果数据库重启，就会失效，要永久有效需要配置到 MySQL 的配置文件
+set GLOBAL max_connections=1000; 
 ```
 
 **查看连接进程**
@@ -108,7 +115,7 @@ func AuthCheckRole(c *gin.Context) {
 }
 ```
 
-看了下代码，就猜到是 Casbin 的问题了，因为每次页面请求都会验证角色权限，而每次都会调用 casbin.Casbin\(\)，它又是调用到了 gormadapter.NewAdapter\(\) ，每一次都会 New 的话就很可能占用了一次连接。继续跟进去：
+看了下代码，就猜到是 Casbin 的问题了，因为每次页面请求都会验证角色权限，而每次都会调用 `casbin.Casbin()`，它又是调用到了 `gormadapter.NewAdapter()` ，每一次都会 New 的话就很可能占用了一次连接。继续跟进去：
 
 ```go
 func NewAdapter(driverName string, dataSourceName string, dbSpecified ...bool) (*Adapter, error) {
@@ -127,7 +134,7 @@ func NewAdapter(driverName string, dataSourceName string, dbSpecified ...bool) (
 }
 ```
 
-可以看到这里有 open 操作，写着打开一个 DB，点进去看：
+可以看到这里有 `a.open()` 操作，写着打开一个 DB，点进去看：
 
 ```go
 func (a *Adapter) open() error {
@@ -158,4 +165,84 @@ func (a *Adapter) open() error {
 	return a.createTable()
 }
 ```
+
+看到这里的 `openDBConnection()` 就彻底明白了，`*gorm.DB` 对象每一次都会创建，每一次创建都会建立连接，最终导致 MySQL 连接满。
+
+## 改进
+
+每次连接改成创建的对象的时候创建一次连接，后面共用 `*gorm.DB`。
+
+```go
+type Permission struct {
+	adapter    *gormadapter.Adapter
+	enforcer   *casbin.Enforcer
+	configPath string
+}
+
+func NewPermission(dbModel config.DbConfig, path string) *Permission {
+	p := &Permission{
+		configPath: path, // "pkg/config/rbac_model.conf"
+	}
+	connArgs := fmt.Sprintf("%s:%s@(%s:%s)/", dbModel.Username, dbModel.Password, dbModel.Host, dbModel.Port)
+
+	if a, err := gormadapter.NewAdapter("mysql", connArgs); err != nil {
+		panic(err)
+	} else {
+		p.adapter = a
+
+		if e, err := casbin.NewEnforcer(p.configPath, p.adapter, true); err != nil {
+			panic(err)
+		} else {
+			p.enforcer = e
+		}
+	}
+
+	return p
+}
+
+func GetPermission() *Permission {
+	onceNew.Do(func() {
+		PermissionService = NewPermission(config.GetMustConfig().Orgrimmar.DbConfig, config.GetMustConfig().Orgrimmar.CasbinPath)
+	})
+
+	return PermissionService
+}
+
+// 增加权限
+func (p *Permission) AddPermissionParams(params ...string) (bool, error) {
+	var pm PermissionModel
+	l := len(params)
+	switch {
+	case l == 4 && params[0] == "p":
+		pm = p.make3PermissionModel("p", params[0], params[1], params[2])
+	case l == 3 && params[0] == "g":
+		pm = p.make2PermissionModel("g", params[0], params[1])
+	default:
+		return false, nil
+	}
+
+	return p.AddPermission(pm)
+}
+
+// Check 验证权限
+func (p *Permission) Check(p1, p2, p3 string) (bool, error) {
+	return p.enforcer.Enforce(p1, p2, p3)
+}
+
+// RemovePolicy 删除策略 传入 p 对应的 v0 v1 v2 参数
+func (p *Permission) RemovePolicy(params ...string) (bool, error) {
+	return p.enforcer.RemovePolicy(params)
+}
+
+......
+```
+
+因为暂时配置目前不需要动态刷新，所以直接共享了下面两个变量：
+
+```text
+adapter    *gormadapter.Adapter
+enforcer   *casbin.Enforcer
+```
+
+后面对 casbin 的操作都基于了 enforcer。
 

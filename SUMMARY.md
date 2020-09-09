@@ -20,5 +20,5 @@
 
 ---
 
-* [Casbin 导致的数据库连接池满](casbin-dao-zhi-de-shu-ju-ku-lian-jie-chi-man.md)
+* [Casbin 导致的数据库连接满](casbin-dao-zhi-de-shu-ju-ku-lian-jie-chi-man.md)
 
