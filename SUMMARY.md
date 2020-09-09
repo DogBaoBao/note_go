@@ -6,11 +6,15 @@
 
 * [Slice](base/slice.md)
 
-## Go编程技巧
+## Go编程技巧 <a id="tech"></a>
 
-* [巧妙的 for 循环](go-bian-cheng-ji-qiao/qiao-miao-de-for-xun-huan.md)
+* [巧妙的 for 循环](tech/for.md)
 
 ## Web
 
 * [Gin](web/gin.md)
+
+## 常用库 <a id="rep"></a>
+
+* [Casbin](rep/casbin.md)
 
