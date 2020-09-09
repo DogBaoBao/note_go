@@ -16,9 +16,6 @@
 
 ## 常用库 <a id="rep"></a>
 
-* [Casbin](rep/casbin.md)
-
----
-
-* [Casbin 导致的数据库连接满](casbin-too-many-connect.md)
+* [Casbin](rep/casbin/README.md)
+  * [Casbin 导致的数据库连接满](rep/casbin/casbin-too-many-connect.md)
 
