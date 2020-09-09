@@ -20,6 +20,7 @@
 * [Casbin](rep/casbin/README.md)
   * [GitHub](https://github.com/casbin/casbin)
   * [中文官方文档](https://casbin.org/zh-CN/)
+  * [Go 每日一库之 casbin](https://darjun.github.io/2020/06/12/godailylib/casbin/)
   * [Casbin 导致的数据库连接满](rep/casbin/casbin-too-many-connect.md)
 
 ## 收藏夹 <a id="collect"></a>
