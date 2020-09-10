@@ -17,6 +17,11 @@
 
 ## 常用库 <a id="rep"></a>
 
+* [Gorm](rep/gorm/README.md)
+  * [GitHub](https://github.com/go-gorm/gorm)
+  * [中文官方文档](https://gorm.io/zh_CN/)
+  * [Gorm v2](rep/gorm/gorm-v2/README.md)
+    * [Gorm 创建](rep/gorm/gorm-v2/gorm-chuang-jian.md)
 * [Casbin](rep/casbin/README.md)
   * [GitHub](https://github.com/casbin/casbin)
   * [中文官方文档](https://casbin.org/zh-CN/)
