@@ -2,9 +2,9 @@
 
 ## 创建对象
 
-### 字段默认值填充
+### 通过数据指针创建
 
-#### 指针对象和非指针对象
+#### 不带 default（会设置默认值）
 
 ```go
 type User struct {
@@ -58,4 +58,28 @@ INSERT INTO `gdcloud_user` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,
 ```
 
 `Address` 的插入默认值已经变成了 `"hangzhou"`
+
+#### 高端插入（Upsert）
+
+```go
+func TestUpsert(t *testing.T) {
+   time := time.Now()
+   user := User{
+      Name:     "tiecheng",
+      Age:      18,
+      Birthday: &time,
+   }
+
+   DB.Clauses(clause.OnConflict{
+      Columns:   []clause.Column{{Name: "name"}, {Name: "nickname"}, {Name: "deleted_at"}},
+      DoUpdates: clause.Assignments(map[string]interface{}{"name": user.Name, "nickname": user.Nickname, "deleted_at": nil}),
+   }).Create(&user)
+}
+```
+
+输出 SQL
+
+```sql
+INSERT INTO `gdcloud_user` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`birthday`,`nickname`,`address`) VALUES ("2020-09-10 19:41:09.159","2020-09-10 19:41:09.159",NULL,"tiecheng",18,"2020-09-10 19:41:09.159",NULL,"hangzhou") ON DUPLICATE KEY UPDATE `deleted_at`=NULL,`name`="tiecheng",`nickname`=NULL
+```
 
