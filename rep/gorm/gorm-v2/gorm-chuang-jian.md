@@ -85,7 +85,27 @@ INSERT INTO `gdcloud_user` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,
 
 ## 项目实战
 
-输出 SQL
+### 主键回填失败
+
+![](../../../.gitbook/assets/image%20%282%29.png)
+
+> | primaryKey | 指定列为主键 |
+> | :--- | :--- |
+
+修改 Base 
+
+```go
+type Base struct {
+	ID        int64          `gorm:"primarykey;column:id;type:bigint(20) unsigned;not null;autoIncrement" json:"-"` // id
+	CreatedAt time.Time      `gorm:"column:created_at;not null;" json:"createdAt"`                                  // 创建时间
+	CreatedBy string         `gorm:"column:created_by;type:varchar(20);not null;default:System;" json:"createdBy"`  // 创建人
+	UpdatedAt time.Time      `gorm:"column:updated_at;type:datetime;not null;" json:"updatedAt"`                    // 更新时间
+	UpdatedBy string         `gorm:"column:updated_by;type:varchar(20);not null;default:System;" json:"updatedBy"`  // 更新人
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;not null;" json:"deletedAt"`                                  // 删除时间
+}
+```
+
+### 输出 SQL打印对不上
 
 ```sql
 INSERT INTO `gdcloud_user` (`id`,`created_at`,`created_by`,`updated_at`,`updated_by`,`deleted_at`,`name`,`nickname`,`chinese_name`,`english_name`,`first_name`,`second_name`,`ali_staff_id`,`phone`,`email`,`second_email`,`dept_id`,`position_id`,`entry_at`,`hometown`,`head_img_url`,`status`) VALUES (0,"2020-09-11 09:58:00.486","System","2020-09-11 09:58:00.486","System","1987-06-05 04:03:02","tiecheng.tc","鐵手","铁城",NULL,NULL,NULL,NULL,"18768171164","tiecheng.tc@gongdao.com",NULL,0,0,"2020-09-11 09:58:00.486",NULL,"https://avatars2.githubusercontent.com/u/553434601s=400&u=8f60cf1a440ea3395401df0e0e880c9d37aae395&v=4",?)
