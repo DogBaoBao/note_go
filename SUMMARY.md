@@ -23,7 +23,7 @@
   * [Gorm v2](rep/gorm/gorm-v2/README.md)
     * [Gorm 创建](rep/gorm/gorm-v2/gorm-chuang-jian.md)
     * [Gorm 更新](rep/gorm/gorm-v2/gorm-geng-xin.md)
-    * [Gorm 软删除改进](rep/gorm/gorm-v2/gorm-ruan-shan-chu-gai-jin.md)
+    * [Gorm 软删除改进](rep/gorm/gorm-v2/soft-delete-imporve.md)
 * [Casbin](rep/casbin/README.md)
   * [GitHub](https://github.com/casbin/casbin)
   * [中文官方文档](https://casbin.org/zh-CN/)
