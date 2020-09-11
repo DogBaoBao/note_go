@@ -83,3 +83,13 @@ func TestUpsert(t *testing.T) {
 INSERT INTO `gdcloud_user` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`birthday`,`nickname`,`address`) VALUES ("2020-09-10 19:41:09.159","2020-09-10 19:41:09.159",NULL,"tiecheng",18,"2020-09-10 19:41:09.159",NULL,"hangzhou") ON DUPLICATE KEY UPDATE `deleted_at`=NULL,`name`="tiecheng",`nickname`=NULL
 ```
 
+## 项目实战
+
+输出 SQL
+
+```sql
+INSERT INTO `gdcloud_user` (`id`,`created_at`,`created_by`,`updated_at`,`updated_by`,`deleted_at`,`name`,`nickname`,`chinese_name`,`english_name`,`first_name`,`second_name`,`ali_staff_id`,`phone`,`email`,`second_email`,`dept_id`,`position_id`,`entry_at`,`hometown`,`head_img_url`,`status`) VALUES (0,"2020-09-11 09:58:00.486","System","2020-09-11 09:58:00.486","System","1987-06-05 04:03:02","tiecheng.tc","鐵手","铁城",NULL,NULL,NULL,NULL,"18768171164","tiecheng.tc@gongdao.com",NULL,0,0,"2020-09-11 09:58:00.486",NULL,"https://avatars2.githubusercontent.com/u/553434601s=400&u=8f60cf1a440ea3395401df0e0e880c9d37aae395&v=4",?)
+```
+
+
+
