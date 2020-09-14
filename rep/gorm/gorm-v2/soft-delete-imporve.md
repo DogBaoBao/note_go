@@ -12,6 +12,18 @@ description: v1 升级到 v2  + 软删除使用采坑贴
 
 ### 查询结果不存在情况
 
+v1中是有不存在异常的
+
+```go
+var (
+	// ErrRecordNotFound returns a "record not found error". Occurs only when attempting to query the database with a struct; querying with a slice won't return this error
+	ErrRecordNotFound = errors.New("record not found")
+	......
+)
+```
+
+在 v2 下查询是如下结果：
+
 ![](../../../.gitbook/assets/image%20%283%29.png)
 
 并没有 Error 出现，之前 v1 如果数据不存在是会有个 Error 信息。
