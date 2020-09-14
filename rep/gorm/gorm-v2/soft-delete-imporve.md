@@ -6,13 +6,49 @@ description: v1 升级到 v2  + 软删除使用采坑贴
 
 ## 背景
 
-最近给之前的 gorm v1 升级到了 ,vvd d 
+最近给之前的 gorm v1 升级到了 v2，基本上全线不能使用，这里记录下升级的变化点。
+
+## 查询
+
+### 查询结果不存在情况
+
+![](../../../.gitbook/assets/image%20%283%29.png)
+
+并没有 Error 出现，之前 v1 如果数据不存在是会有个 Error 信息。
+
+保持之前的使用习惯，添加如下代码：
+
+```go
+func (b *Base) AfterFind(tx *gorm.DB) (err error) {
+	if b.ID == 0 {
+		return ERROR_NOT_FOUND
+	}
+
+	return nil
+}
+```
+
+这样查询如果没有数据，结果会是如下：
+
+![](../../../.gitbook/assets/image%20%284%29.png)
+
+如果认为找不到数据不应该出现异常，那么可以根据 `RowsAffected` 来返回 `true|false`。
+
+### 查询数量
+
+由之前的 int 改为了 int64
+
+```go
+func (db *DB) Count(count *int64) (tx *DB) {}
+```
+
+## 软删除
 
 gorm 的软删除默认是 `deleted_at` 字段，值为 NULL，即插入的时候 `deleted_at` 为 NULL，查找的时候带上 `WHERE deleted_at = NULL`。
 
-## 改进
+### 改进
 
-### 插入的时候加默认值
+#### 插入的时候加默认值
 
 插入的时候自动填充 `deleted_at` 字段为默认字段
 
@@ -57,7 +93,7 @@ func TestCreate(t *testing.T) {
 INSERT INTO `gdcloud_user` (`id`,`created_at`,`created_by`,`updated_at`,`updated_by`,`deleted_at`,`name`,`age`,`birthday`,`nickname`,`address`) VALUES (0,"2020-09-11 16:39:36.211","System","2020-09-11 16:39:36.211","System","1987-06-05 04:03:02","tiecheng",18,"2020-09-11 16:39:36.21",NULL,"hangzhou")
 ```
 
-### 删除的时候软删除
+#### 删除的时候软删除
 
 运行删除测试代码：
 
@@ -105,7 +141,7 @@ func (b *Base) BeforeCreate(tx *gorm.DB) (err error) {
 UPDATE `gdcloud_user` SET `deleted_at`="2020-09-11 12:52:21.529" WHERE name = "tiecheng"
 ```
 
-### 查找的时候带默认删除时间
+#### 查找的时候带默认删除时间
 
 > 核心就是修改下图红色的值
 
@@ -136,9 +172,9 @@ func QueryClauses() []clause.Interface {
 
 在进行 `query` 这个 `callback` 之前修改 `db.Statement.Schema.QueryClauses` 里面 `deleted_at` 的 `value` 值为业务需要的默认删除时间即可，我这里为了简单就直接替换了整个数组。
 
-## 源码分析
+### 源码分析
 
-### 有哪些官方自带的callback
+#### 有哪些官方自带的callback
 
 ```go
 func RegisterDefaultCallbacks(db *gorm.DB, config *Config) {
@@ -184,7 +220,7 @@ func RegisterDefaultCallbacks(db *gorm.DB, config *Config) {
 
 上文中添加自定义 `callback` 也是根据这个默认的来加，通过 `Before()` 或 `After()` 控制顺序。
 
-### 如何设置的删除参数
+#### 如何设置的删除参数
 
 ```go
 func (DeletedAt) QueryClauses() []clause.Interface {
@@ -207,7 +243,7 @@ type QueryClausesInterface interface {
 }
 ```
 
-### 哪里设置
+#### 哪里设置
 
 ```go
 func (schema *Schema) ParseField(fieldStruct reflect.StructField) *Field {
@@ -237,7 +273,7 @@ func (schema *Schema) ParseField(fieldStruct reflect.StructField) *Field {
 
 可以看到四种类型的 Clause 都是在这里设置的，通过对字段进行断言。
 
-### 哪里拼接
+#### 哪里拼接
 
 ```go
 func (eq Eq) Build(builder Builder) {
@@ -251,4 +287,6 @@ func (eq Eq) Build(builder Builder) {
 	}
 }
 ```
+
+
 
