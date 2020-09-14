@@ -2,9 +2,11 @@
 description: v1 升级到 v2  + 软删除使用采坑贴
 ---
 
-# Gorm 软删除技巧
+# Gorm 升级 V2 使用记录
 
 ## 背景
+
+最近给之前的 gorm v1 升级到了 ,vvd d 
 
 gorm 的软删除默认是 `deleted_at` 字段，值为 NULL，即插入的时候 `deleted_at` 为 NULL，查找的时候带上 `WHERE deleted_at = NULL`。
 
