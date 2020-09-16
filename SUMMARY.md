@@ -36,9 +36,6 @@
 * [学习视频](collect/video/README.md)
   * [带你21周搞定Go语言](https://www.youtube.com/playlist?list=PLd1mymN837zK6u1byqhFXjU5fbr7gYy0g)
 * [源码](collect/yuan-ma.md)
-* [书籍](collect/book.md)
-
----
-
-* [Go 语言原本](https://golang.design/under-the-hood/)
+* [书籍](collect/book/README.md)
+  * [Go 语言原本](https://golang.design/under-the-hood/)
 
