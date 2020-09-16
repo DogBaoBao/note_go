@@ -39,3 +39,7 @@
 * [书籍](collect/book/README.md)
   * [Go 语言原本](https://golang.design/under-the-hood/)
 
+---
+
+* [awesome-go](https://awesome-go.com/)
+
