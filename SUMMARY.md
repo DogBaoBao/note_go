@@ -38,8 +38,6 @@
 * [源码](collect/yuan-ma.md)
 * [书籍](collect/book/README.md)
   * [Go 语言原本](https://golang.design/under-the-hood/)
-
----
-
-* [awesome-go](https://awesome-go.com/)
+* [其它资料](collect/qi-ta-zi-liao/README.md)
+  * [awesome-go](https://awesome-go.com/)
 
