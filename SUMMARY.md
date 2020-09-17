@@ -39,5 +39,6 @@
 * [书籍](collect/book/README.md)
   * [Go 语言原本](https://golang.design/under-the-hood/)
 * [其它资料](collect/qi-ta-zi-liao/README.md)
+  * [杂记](collect/qi-ta-zi-liao/other.md)
   * [awesome-go](https://awesome-go.com/)
 
