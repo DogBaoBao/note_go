@@ -28,5 +28,33 @@ for _,item := range xxx {
 }
 ```
 
+#### 实际效果
 
+```go
+func BuildChildMenu(menus []Menu) {
+	menuMap := make(map[int64]*Menu, len(menus))
+
+	for i := range menus {
+		menu := menus[i]
+		menuMap[menu.ID] = &menu
+	}
+	
+}
+```
+
+menuMap 里面是正常的值
+
+如果是：
+
+```go
+func BuildChildMenu(menus []Menu) {
+		menuMap := make(map[int64]*Menu, len(menus))
+
+	for _, m := range menus {
+		menuMap[m.ParentID] = &m
+	}
+}	
+```
+
+所有的 `*Menu` 值都是一样的
 
