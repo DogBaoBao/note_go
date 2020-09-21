@@ -43,3 +43,7 @@
   * [杂记](collect/qi-ta-zi-liao/other.md)
   * [awesome-go](https://awesome-go.com/)
 
+## 博客 <a id="blog"></a>
+
+* [日常使用](blog/ri-chang-shi-yong.md)
+
