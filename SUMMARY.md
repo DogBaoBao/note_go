@@ -45,5 +45,5 @@
 
 ## 博客 <a id="blog"></a>
 
-* [日常使用](blog/ri-chang-shi-yong.md)
+* [日常使用](blog/daily.md)
 
