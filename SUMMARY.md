@@ -37,6 +37,7 @@
   * [带你21周搞定Go语言](https://www.youtube.com/playlist?list=PLd1mymN837zK6u1byqhFXjU5fbr7gYy0g)
 * [源码](collect/yuan-ma.md)
 * [书籍](collect/book/README.md)
+  * [go语言中文文档](https://www.bookstack.cn/books/topgoer)
   * [Go 语言原本](https://golang.design/under-the-hood/)
 * [其它资料](collect/qi-ta-zi-liao/README.md)
   * [官方代码风格](https://github.com/golang/go/wiki/CodeReviewComments)
